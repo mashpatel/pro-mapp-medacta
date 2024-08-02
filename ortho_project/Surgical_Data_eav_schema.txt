@@ -1,0 +1,7 @@
+CREATE TABLE Surgical_Data_EAV (
+    EntityID INTEGER,
+    Attribute TEXT,
+    Value TEXT,
+    FOREIGN KEY (EntityID) REFERENCES Surgical_Data(PathwayPID)
+);
+CREATE INDEX idx_entityid ON Surgical_Data_EAV (EntityID);

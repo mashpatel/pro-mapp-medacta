@@ -1,0 +1,240 @@
+﻿PathwayPID: Unique identifier for the patient's care pathway 
+CID: Case or Clinical Identifier 
+Clinician_txt: Text field for clinician's name 
+Location: Code for surgery location 
+Location_txt: Text description of surgery location 
+Procedure: Code for the surgical procedure 
+Procedure_txt: Text description of the surgical procedure 
+AdditionalTibialVVRecut: Boolean for additional tibial varus/valgus recut 
+AdditionalTibialVVRecut_txt: Text details about additional tibial varus/valgus recut 
+AddNotes: Additional notes field 
+AdmitScore: Score given upon admission (possibly related to patient condition) 
+Age: Patient's age 
+Alignment: Code for knee alignment 
+Alignment_txt: Text description of knee alignment 
+Anesthesia: Type of anesthesia used (likely a code)
+AnesthesiaExemption: Code for any exemption from standard anesthesia protocol
+AnesthesiaExemption_txt: Text explanation of anesthesia exemption
+AnesthesiaO1: First option/type of anesthesia (likely a code)
+AnesthesiaO1_txt: Text description of first anesthesia option
+AnesthesiaO2: Second option/type of anesthesia
+AnesthesiaO2_txt: Text description of second anesthesia option
+AnesthesiaO3: Third option/type of anesthesia
+AnesthesiaO3_txt: Text description of third anesthesia option
+Assistant: Code or ID for surgical assistant
+BMI: Patient's Body Mass Index
+BoneCementTypeFix: Code for type of bone cement used
+BoneCementTypeFix_txt: Text description of bone cement type
+ChangedSurgicalPlan: Boolean indicating if surgical plan was changed
+Complete: Boolean indicating if the procedure is complete
+CompleteBy: ID of person who marked the procedure complete
+CompleteBy_txt: Name of person who marked the procedure complete
+CompleteDate: Date the procedure was marked complete
+ComponentManufacturer: Code for implant manufacturer
+ComponentManufacturer_txt: Name of implant manufacturer
+Created: Date the record was created
+DischargeDate: Date the patient was discharged
+DFRLateralCondyleFinalThickness: Final thickness of distal femoral resection (DFR) lateral condyle
+DFRLateralCondyleFinalThickness_txt: Text description of DFR lateral condyle final thickness
+DFRLateralCondyleInitialThickness: Initial thickness of DFR lateral condyle
+DFRLateralCondyleInitialThickness_txt: Text description of DFR lateral condyle initial thickness
+DFRLateralCondyleRecut: Boolean indicating if DFR lateral condyle was recut
+DFRLateralCondyleRecut_txt: Text details about DFR lateral condyle recut
+DFRLateralCondyleStatus: Status code for DFR lateral condyle
+DFRLateralCondyleStatus_txt: Text description of DFR lateral condyle status
+DFRLateralCondyleWasher: Code for washer used on DFR lateral condyle
+DFRLateralCondyleWasher_txt: Text description of washer used on DFR lateral condyle
+DFRMedialCondyleFinalThickness: Final thickness of DFR medial condyle
+DFRMedialCondyleFinalThickness_txt: Text description of DFR medial condyle final thickness
+DFRMedialCondyleInitialThickness: Initial thickness of DFR medial condyle
+DFRMedialCondyleInitialThickness_txt: Text description of DFR medial condyle initial thickness
+DFRMedialCondyleRecut: Boolean indicating if DFR medial condyle was recut
+DFRMedialCondyleRecut_txt: Text details about DFR medial condyle recut
+DFRMedialCondyleStatus: Status code for DFR medial condyle
+DFRMedialCondyleStatus_txt: Text description of DFR medial condyle status
+DFRMedialCondyleWasher: Code for washer used on DFR medial condyle
+DFRMedialCondyleWasher_txt: Text description of washer used on DFR medial condyle
+EstimatedBloodLoss: Numerical value of estimated blood loss during surgery
+EstimatedBloodLoss_txt: Text description of estimated blood loss
+FellowUsed: Boolean indicating if a surgical fellow was involved
+FellowUsed_txt: Text details about the fellow's involvement
+FemoralComponent: Code for the type of femoral component used
+FemoralComponent_txt: Text description of the femoral component
+FemoralSize: Size code for the femoral component
+FemoralSize_txt: Text description of the femoral component size
+Gender: Patient's gender code
+Gender_txt: Text description of patient's gender
+getClin: Likely a function or flag to retrieve clinician information
+HardwareRemoved: Boolean indicating if any hardware was removed during surgery
+Height: Patient's height
+IntraoperativeMeds: Code for intraoperative medications used
+IntraoperativeMedsO1: First option/type of intraoperative medication
+IntraoperativeMedsO1_txt: Text description of first intraoperative medication
+IntraoperativeMedsO2: Second option/type of intraoperative medication
+IntraoperativeMedsO2_txt: Text description of second intraoperative medication
+IntraOpXrays: Boolean indicating if intraoperative X-rays were taken
+IntraOpXrays_txt: Text details about intraoperative X-rays
+LactatedRingers: Likely a boolean or quantity for Lactated Ringer's solution used
+LateralRetinacularRelease: Boolean indicating if lateral retinacular release was performed
+LateralRetinacularRelease_txt: Text details about lateral retinacular release
+OADeformity: Code for osteoarthritis deformity
+OADeformity_txt: Text description of osteoarthritis deformity
+ObesityComplexityModifier: Likely a code or score related to obesity's impact on surgical complexity
+PatellaComponent: Code for the type of patellar component used
+PatellaComponent_txt: Text description of the patellar component
+PatellaSize: Size code for the patellar component
+PatellaSize_txt: Text description of the patellar component size
+PCLRelease: Boolean indicating if posterior cruciate ligament (PCL) release was performed
+PFRLateralCondyleFinalThickness: Final thickness of posterior femoral resection (PFR) lateral condyle
+PFRLateralCondyleFinalThickness_txt: Text description of PFR lateral condyle final thickness
+PFRLateralCondyleInitialThickness: Initial thickness of PFR lateral condyle
+PFRLateralCondyleInitialThickness_txt: Text description of PFR lateral condyle initial thickness
+PFRLateralCondyleRecut: Boolean indicating if PFR lateral condyle was recut
+PFRLateralCondyleRecut_txt: Text details about PFR lateral condyle recut
+PFRLateralCondyleStatus: Status code for PFR lateral condyle
+PFRLateralCondyleStatus_txt: Text description of PFR lateral condyle status
+PFRMedialCondyleFinalThickness: Final thickness of PFR medial condyle
+PFRMedialCondyleFinalThickness_txt: Text description of PFR medial condyle final thickness
+PFRMedialCondyleInitialThickness: Initial thickness of PFR medial condyle
+PFRMedialCondyleInitialThickness_txt: Text description of PFR medial condyle initial thickness
+PFRMedialCondyleRecut: Boolean indicating if PFR medial condyle was recut
+PFRMedialCondyleRecut_txt: Text details about PFR medial condyle recut
+PFRMedialCondyleStatus: Status code for PFR medial condyle
+PFRMedialCondyleStatus_txt: Text description of PFR medial condyle status
+Poly: Code for the type of polyethylene insert used
+Poly_txt: Text description of the polyethylene insert
+PolySize: Size code for the polyethylene insert
+PolySize_txt: Text description of the polyethylene insert size
+PolyThickness: Thickness of the polyethylene insert
+PolyThickness_txt: Text description of the polyethylene insert thickness
+PostOpDiagnosis: Code for post-operative diagnosis
+PostOpDiagnosisO1: First option/type of post-operative diagnosis
+PostOpDiagnosisO1_code: Code for first post-operative diagnosis option
+PostOpDiagnosisO1_txt: Text description of first post-operative diagnosis option
+PostOperativeAlignment: Code for post-operative knee alignment
+PostOperativeAlignment_txt: Text description of post-operative knee alignment
+PreOpDiagnosis: Code for pre-operative diagnosis
+PreOpDiagnosisO1: First option/type of pre-operative diagnosis
+PreOpDiagnosisO1_code: Code for first pre-operative diagnosis option
+PreOpDiagnosisO1_txt: Text description of first pre-operative diagnosis option
+PreOperativeAlignment: Code for pre-operative knee alignment
+PreOperativeAlignment_txt: Text description of pre-operative knee alignment
+Robotic: Boolean indicating if robotic assistance was used in surgery
+Sensitin: Likely related to patient sensitization or allergies (possibly a code)
+Sensitin_txt: Text description of patient sensitization or allergies
+Side: Code for the side of the body operated on (e.g., left or right knee)
+Side_txt: Text description of the side operated on
+TibialComponent: Code for the type of tibial component used
+TibialComponent_txt: Text description of the tibial component
+TibialResection: Measurement or code for tibial resection
+TibialResection_txt: Text description of tibial resection
+TibialResectionPosteriorSlope: Measurement of tibial resection posterior slope
+TibialResectionPosteriorSlope_txt: Text description of tibial resection posterior slope
+TibialSize: Size code for the tibial component
+TibialSize_txt: Text description of the tibial component size
+TibialVVRecut: Boolean indicating if tibial varus/valgus recut was performed
+TibialVVRecut_txt: Text details about tibial varus/valgus recut
+TibialVVRecutDetails: Additional details about tibial varus/valgus recut
+TibialVVRecutDetails_txt: Text description of tibial varus/valgus recut details
+TourniquetTime: Duration of tourniquet use during surgery
+TRLateralFinalThickness: Final thickness of tibial resection (TR) lateral side
+TRLateralFinalThickness_txt: Text description of TR lateral final thickness
+TRLateralInitialThickness: Initial thickness of TR lateral side
+TRLateralInitialThickness_txt: Text description of TR lateral initial thickness
+TRLateralRecut: Boolean indicating if TR lateral side was recut
+TRLateralRecut_txt: Text details about TR lateral recut
+TRLateralRecutAmount: Amount of bone removed in TR lateral recut
+TRLateralRecutAmount_txt: Text description of TR lateral recut amount
+TRMedialFinalThickness: Final thickness of TR medial side
+TRMedialFinalThickness_txt: Text description of TR medial final thickness
+TRMedialInitialThickness: Initial thickness of TR medial side
+TRMedialInitialThickness_txt: Text description of TR medial initial thickness
+TRMedialRecut: Boolean indicating if TR medial side was recut
+TRMedialRecut_txt: Text details about TR medial recut
+TRMedialRecutAmount: Amount of bone removed in TR medial recut
+TRMedialRecutAmount_txt: Text description of TR medial recut amount
+ValgusRelease: Boolean indicating if valgus release was performed
+ValgusReleaseO4: Fourth option/type of valgus release
+ValgusReleaseO4_txt: Text description of fourth valgus release option
+VancomycinDosage: Dosage of Vancomycin administered
+VancomycinDosage_txt: Text description of Vancomycin dosage
+VarusRelease: Boolean indicating if varus release was performed
+VarusReleaseO1: First option/type of varus release
+VarusReleaseO1_txt: Text description of first varus release option
+Weight: Patient's weight
+Baseline: Likely a baseline measurement or score
+AddNotes_txt: Text field for additional notes
+HardwareRemoved_txt: Text description of hardware removed
+Notes: General notes field
+12 Months: Likely related to 12-month follow-up data
+Fellow: Possibly the name or ID of the fellow involved
+DFRLCRecutAmount: Amount of bone removed in DFR lateral condyle recut
+DFRLCRecutAmount_txt: Text description of DFR lateral condyle recut amount
+DFRMCRecutAmount: Amount of bone removed in DFR medial condyle recut
+DFRMCRecutAmount_txt: Text description of DFR medial condyle recut amount
+AssistantO13: 13th option/type of surgical assistant
+AssistantO13_txt: Text description of 13th surgical assistant option
+ChangedSurgicalPlan_txt: Text description of changes to surgical plan
+AdditionalTibialVVRecutDetails: Details of additional tibial varus/valgus recut
+AdditionalTibialVVRecutDetails_txt: Text description of additional tibial VV recut details
+Amended: Boolean indicating if the record has been amended
+AmendmentFlag: Flag indicating an amendment to the record
+Robotic_txt: Text description of robotic assistance used
+PCLReleaseO7: Seventh option/type of PCL release
+PCLReleaseO7_txt: Text description of seventh PCL release option
+Instrumentation: Code for instrumentation used
+Instrumentation_txt: Text description of instrumentation used
+getClin_txt: Text description related to retrieving clinician information
+PatellaType: Code for type of patella procedure or component
+PatellaType_txt: Text description of patella type
+PolyInsertType: Code for type of polyethylene insert
+PolyInsertType_txt: Text description of polyethylene insert type
+VarusReleaseO2: Second option/type of varus release
+VarusReleaseO2_txt: Text description of second varus release option
+ComplexityInformation: Information about case complexity
+OperativeTimeIncrease: Increase in operative time
+OperativeTimeIncrease_txt: Text description of operative time increase
+Drain: Boolean or code indicating if a drain was used
+Drain_txt: Text description of drain usage
+PolyType: Code for type of polyethylene
+PolyType_txt: Text description of polyethylene type
+FemoroTibialLinkage: Code for type of femoro-tibial linkage
+FemoroTibialLinkage_txt: Text description of femoro-tibial linkage
+TibialStemExtension: Code for tibial stem extension
+TibialStemExtension_txt: Text description of tibial stem extension
+Addendum: Additional information field
+AddOpt: Additional option (likely a code)
+AddOpt_txt: Text description of additional option
+Age2: Possibly a secondary age field or age at a different time point
+Anesthesia_txt: Text description of anesthesia used
+Anesthesiologist: Name or ID of the anesthesiologist
+Assistant_txt: Text description of surgical assistant
+clinRef: Clinical reference number
+Complications: Code for complications
+Complications_txt: Text description of complications
+CPAKClassification: Classification code (possibly related to complexity or outcome)
+CPAKClassification_txt: Text description of CPAK classification
+EBL: Estimated blood loss
+EBL_txt: Text description of estimated blood loss
+Femoral: Code for femoral component or procedure
+Femoral_txt: Text description of femoral component or procedure
+Implant: Code for implant used
+Implant_txt: Text description of implant used
+LocationOpNote: Location mentioned in operative note
+Patella: Code for patellar component or procedure
+Patella_txt: Text description of patellar component or procedure
+PostOpDiagnosis_txt: Text description of post-operative diagnosis
+PreOpDiagnosis_txt: Text description of pre-operative diagnosis
+Tibial: Code for tibial component or procedure
+Tibial_txt: Text description of tibial component or procedure
+PreOpPainBlock: Pre-operative pain block administered
+PreOpPainBlock_txt: Text description of pre-operative pain block
+PFLCRecut: Boolean indicating if posterior femoral lateral condyle was recut
+PFLCRecut_txt: Text description of posterior femoral lateral condyle recut 234-245: Goniometric measurements at various thicknesses (10mm to 20mm) 246-249: Tick marks for various thicknesses (10mm to 14mm)
+PreOpDiagnosisOther: Other pre-operative diagnosis
+DFRMCWasherAmount: Amount of washer used on DFR medial condyle
+DFRMCWasherAmount_txt: Text description of DFR medial condyle washer amount
+DFRLCWasherAmount: Amount of washer used on DFR lateral condyle
+DFRLCWasherAmount_txt: Text description of DFR lateral condyle washer amount
+Ticks10mm: Tick marks at 10mm thickness
+PostOpDiagnosisOther: Other post-operative diagnosis

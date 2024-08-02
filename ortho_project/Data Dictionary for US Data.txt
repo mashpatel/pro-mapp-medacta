@@ -1,0 +1,346 @@
+PathwayPID: Unique identifier for the patient's care pathway 
+CID: Case or Clinical Identifier 
+Clinician_txt: Text field for clinician's name 
+Location: Code for surgery location 
+Location_txt: Text description of surgery location 
+Procedure: Code for the surgical procedure 
+Procedure_txt: Text description of the surgical procedure 
+AdditionalTibialVVRecut: Boolean for additional tibial varus/valgus recut 
+AdditionalTibialVVRecut_txt: Text details about additional tibial varus/valgus recut 
+AddNotes: Additional notes field 
+AdmitScore: Score given upon admission (possibly related to patient condition) 
+Age: Patient's age 
+Alignment: Code for knee alignment 
+Alignment_txt: Text description of knee alignment 
+Anesthesia: Type of anesthesia used (likely a code)
+AnesthesiaExemption: Code for any exemption from standard anesthesia protocol
+AnesthesiaExemption_txt: Text explanation of anesthesia exemption
+AnesthesiaO1: First option/type of anesthesia (likely a code)
+AnesthesiaO1_txt: Text description of first anesthesia option
+AnesthesiaO2: Second option/type of anesthesia
+AnesthesiaO2_txt: Text description of second anesthesia option
+AnesthesiaO3: Third option/type of anesthesia
+AnesthesiaO3_txt: Text description of third anesthesia option
+Assistant: Code or ID for surgical assistant
+BMI: Patient's Body Mass Index
+BoneCementTypeFix: Code for type of bone cement used
+BoneCementTypeFix_txt: Text description of bone cement type
+ChangedSurgicalPlan: Boolean indicating if surgical plan was changed
+Complete: Boolean indicating if the procedure is complete
+CompleteBy: ID of person who marked the procedure complete
+CompleteBy_txt: Name of person who marked the procedure complete
+CompleteDate: Date the procedure was marked complete
+ComponentManufacturer: Code for implant manufacturer
+ComponentManufacturer_txt: Name of implant manufacturer
+Created: Date the record was created
+DischargeDate: Date the patient was discharged
+DFRLateralCondyleFinalThickness: Final thickness of distal femoral resection (DFR) lateral condyle
+DFRLateralCondyleFinalThickness_txt: Text description of DFR lateral condyle final thickness
+DFRLateralCondyleInitialThickness: Initial thickness of DFR lateral condyle
+DFRLateralCondyleInitialThickness_txt: Text description of DFR lateral condyle initial thickness
+DFRLateralCondyleRecut: Boolean indicating if DFR lateral condyle was recut
+DFRLateralCondyleRecut_txt: Text details about DFR lateral condyle recut
+DFRLateralCondyleStatus: Status code for DFR lateral condyle
+DFRLateralCondyleStatus_txt: Text description of DFR lateral condyle status
+DFRLateralCondyleWasher: Code for washer used on DFR lateral condyle
+DFRLateralCondyleWasher_txt: Text description of washer used on DFR lateral condyle
+DFRMedialCondyleFinalThickness: Final thickness of DFR medial condyle
+DFRMedialCondyleFinalThickness_txt: Text description of DFR medial condyle final thickness
+DFRMedialCondyleInitialThickness: Initial thickness of DFR medial condyle
+DFRMedialCondyleInitialThickness_txt: Text description of DFR medial condyle initial thickness
+DFRMedialCondyleRecut: Boolean indicating if DFR medial condyle was recut
+DFRMedialCondyleRecut_txt: Text details about DFR medial condyle recut
+DFRMedialCondyleStatus: Status code for DFR medial condyle
+DFRMedialCondyleStatus_txt: Text description of DFR medial condyle status
+DFRMedialCondyleWasher: Code for washer used on DFR medial condyle
+DFRMedialCondyleWasher_txt: Text description of washer used on DFR medial condyle
+EstimatedBloodLoss: Numerical value of estimated blood loss during surgery
+EstimatedBloodLoss_txt: Text description of estimated blood loss
+FellowUsed: Boolean indicating if a surgical fellow was involved
+FellowUsed_txt: Text details about the fellow's involvement
+FemoralComponent: Code for the type of femoral component used
+FemoralComponent_txt: Text description of the femoral component
+FemoralSize: Size code for the femoral component
+FemoralSize_txt: Text description of the femoral component size
+Gender: Patient's gender code
+Gender_txt: Text description of patient's gender
+getClin: Likely a function or flag to retrieve clinician information
+HardwareRemoved: Boolean indicating if any hardware was removed during surgery
+Height: Patient's height
+IntraoperativeMeds: Code for intraoperative medications used
+IntraoperativeMedsO1: First option/type of intraoperative medication
+IntraoperativeMedsO1_txt: Text description of first intraoperative medication
+IntraoperativeMedsO2: Second option/type of intraoperative medication
+IntraoperativeMedsO2_txt: Text description of second intraoperative medication
+IntraOpXrays: Boolean indicating if intraoperative X-rays were taken
+IntraOpXrays_txt: Text details about intraoperative X-rays
+LactatedRingers: Likely a boolean or quantity for Lactated Ringer's solution used
+LateralRetinacularRelease: Boolean indicating if lateral retinacular release was performed
+LateralRetinacularRelease_txt: Text details about lateral retinacular release
+OADeformity: Code for osteoarthritis deformity
+OADeformity_txt: Text description of osteoarthritis deformity
+ObesityComplexityModifier: Likely a code or score related to obesity's impact on surgical complexity
+PatellaComponent: Code for the type of patellar component used
+PatellaComponent_txt: Text description of the patellar component
+PatellaSize: Size code for the patellar component
+PatellaSize_txt: Text description of the patellar component size
+PCLRelease: Boolean indicating if posterior cruciate ligament (PCL) release was performed
+PFRLateralCondyleFinalThickness: Final thickness of posterior femoral resection (PFR) lateral condyle
+PFRLateralCondyleFinalThickness_txt: Text description of PFR lateral condyle final thickness
+PFRLateralCondyleInitialThickness: Initial thickness of PFR lateral condyle
+PFRLateralCondyleInitialThickness_txt: Text description of PFR lateral condyle initial thickness
+PFRLateralCondyleRecut: Boolean indicating if PFR lateral condyle was recut
+PFRLateralCondyleRecut_txt: Text details about PFR lateral condyle recut
+PFRLateralCondyleStatus: Status code for PFR lateral condyle
+PFRLateralCondyleStatus_txt: Text description of PFR lateral condyle status
+PFRMedialCondyleFinalThickness: Final thickness of PFR medial condyle
+PFRMedialCondyleFinalThickness_txt: Text description of PFR medial condyle final thickness
+PFRMedialCondyleInitialThickness: Initial thickness of PFR medial condyle
+PFRMedialCondyleInitialThickness_txt: Text description of PFR medial condyle initial thickness
+PFRMedialCondyleRecut: Boolean indicating if PFR medial condyle was recut
+PFRMedialCondyleRecut_txt: Text details about PFR medial condyle recut
+PFRMedialCondyleStatus: Status code for PFR medial condyle
+PFRMedialCondyleStatus_txt: Text description of PFR medial condyle status
+Shall I continue with the next set?
+CopyRetry
+M
+Yes
+Edit
+Certainly, I'll continue with the next set of fields:
+Poly: Code for the type of polyethylene insert used
+Poly_txt: Text description of the polyethylene insert
+PolySize: Size code for the polyethylene insert
+PolySize_txt: Text description of the polyethylene insert size
+PolyThickness: Thickness of the polyethylene insert
+PolyThickness_txt: Text description of the polyethylene insert thickness
+PostOpDiagnosis: Code for post-operative diagnosis
+PostOpDiagnosisO1: First option/type of post-operative diagnosis
+PostOpDiagnosisO1_code: Code for first post-operative diagnosis option
+PostOpDiagnosisO1_txt: Text description of first post-operative diagnosis option
+PostOperativeAlignment: Code for post-operative knee alignment
+PostOperativeAlignment_txt: Text description of post-operative knee alignment
+PreOpDiagnosis: Code for pre-operative diagnosis
+PreOpDiagnosisO1: First option/type of pre-operative diagnosis
+PreOpDiagnosisO1_code: Code for first pre-operative diagnosis option
+PreOpDiagnosisO1_txt: Text description of first pre-operative diagnosis option
+PreOperativeAlignment: Code for pre-operative knee alignment
+PreOperativeAlignment_txt: Text description of pre-operative knee alignment
+Robotic: Boolean indicating if robotic assistance was used in surgery
+Sensitin: Likely related to patient sensitization or allergies (possibly a code)
+Sensitin_txt: Text description of patient sensitization or allergies
+Side: Code for the side of the body operated on (e.g., left or right knee)
+Side_txt: Text description of the side operated on
+TibialComponent: Code for the type of tibial component used
+TibialComponent_txt: Text description of the tibial component
+TibialResection: Measurement or code for tibial resection
+TibialResection_txt: Text description of tibial resection
+TibialResectionPosteriorSlope: Measurement of tibial resection posterior slope
+TibialResectionPosteriorSlope_txt: Text description of tibial resection posterior slope
+TibialSize: Size code for the tibial component
+TibialSize_txt: Text description of the tibial component size
+TibialVVRecut: Boolean indicating if tibial varus/valgus recut was performed
+TibialVVRecut_txt: Text details about tibial varus/valgus recut
+TibialVVRecutDetails: Additional details about tibial varus/valgus recut
+TibialVVRecutDetails_txt: Text description of tibial varus/valgus recut details
+TourniquetTime: Duration of tourniquet use during surgery
+TRLateralFinalThickness: Final thickness of tibial resection (TR) lateral side
+TRLateralFinalThickness_txt: Text description of TR lateral final thickness
+TRLateralInitialThickness: Initial thickness of TR lateral side
+TRLateralInitialThickness_txt: Text description of TR lateral initial thickness
+TRLateralRecut: Boolean indicating if TR lateral side was recut
+TRLateralRecut_txt: Text details about TR lateral recut
+TRLateralRecutAmount: Amount of bone removed in TR lateral recut
+TRLateralRecutAmount_txt: Text description of TR lateral recut amount
+TRMedialFinalThickness: Final thickness of TR medial side
+TRMedialFinalThickness_txt: Text description of TR medial final thickness
+TRMedialInitialThickness: Initial thickness of TR medial side
+TRMedialInitialThickness_txt: Text description of TR medial initial thickness
+TRMedialRecut: Boolean indicating if TR medial side was recut
+TRMedialRecut_txt: Text details about TR medial recut
+TRMedialRecutAmount: Amount of bone removed in TR medial recut
+TRMedialRecutAmount_txt: Text description of TR medial recut amount
+ValgusRelease: Boolean indicating if valgus release was performed
+ValgusReleaseO4: Fourth option/type of valgus release
+ValgusReleaseO4_txt: Text description of fourth valgus release option
+VancomycinDosage: Dosage of Vancomycin administered
+VancomycinDosage_txt: Text description of Vancomycin dosage
+VarusRelease: Boolean indicating if varus release was performed
+VarusReleaseO1: First option/type of varus release
+VarusReleaseO1_txt: Text description of first varus release option
+Weight: Patient's weight
+Baseline: Likely a baseline measurement or score
+AddNotes_txt: Text field for additional notes
+HardwareRemoved_txt: Text description of hardware removed
+Notes: General notes field
+12 Months: Likely related to 12-month follow-up data
+Fellow: Possibly the name or ID of the fellow involved
+DFRLCRecutAmount: Amount of bone removed in DFR lateral condyle recut
+DFRLCRecutAmount_txt: Text description of DFR lateral condyle recut amount
+DFRMCRecutAmount: Amount of bone removed in DFR medial condyle recut
+DFRMCRecutAmount_txt: Text description of DFR medial condyle recut amount
+AssistantO13: 13th option/type of surgical assistant
+AssistantO13_txt: Text description of 13th surgical assistant option
+ChangedSurgicalPlan_txt: Text description of changes to surgical plan
+AdditionalTibialVVRecutDetails: Details of additional tibial varus/valgus recut
+AdditionalTibialVVRecutDetails_txt: Text description of additional tibial VV recut details
+Amended: Boolean indicating if the record has been amended
+AmendmentFlag: Flag indicating an amendment to the record
+Robotic_txt: Text description of robotic assistance used
+PCLReleaseO7: Seventh option/type of PCL release
+PCLReleaseO7_txt: Text description of seventh PCL release option
+Instrumentation: Code for instrumentation used
+Instrumentation_txt: Text description of instrumentation used
+getClin_txt: Text description related to retrieving clinician information
+PatellaType: Code for type of patella procedure or component
+PatellaType_txt: Text description of patella type
+PolyInsertType: Code for type of polyethylene insert
+PolyInsertType_txt: Text description of polyethylene insert type
+VarusReleaseO2: Second option/type of varus release
+VarusReleaseO2_txt: Text description of second varus release option
+ComplexityInformation: Information about case complexity
+OperativeTimeIncrease: Increase in operative time
+OperativeTimeIncrease_txt: Text description of operative time increase
+Drain: Boolean or code indicating if a drain was used
+Drain_txt: Text description of drain usage
+PolyType: Code for type of polyethylene
+PolyType_txt: Text description of polyethylene type
+FemoroTibialLinkage: Code for type of femoro-tibial linkage
+FemoroTibialLinkage_txt: Text description of femoro-tibial linkage
+TibialStemExtension: Code for tibial stem extension
+TibialStemExtension_txt: Text description of tibial stem extension
+Addendum: Additional information field
+AddOpt: Additional option (likely a code)
+AddOpt_txt: Text description of additional option
+Age2: Possibly a secondary age field or age at a different time point
+Anesthesia_txt: Text description of anesthesia used
+Anesthesiologist: Name or ID of the anesthesiologist
+Assistant_txt: Text description of surgical assistant
+clinRef: Clinical reference number
+Complications: Code for complications
+Complications_txt: Text description of complications
+CPAKClassification: Classification code (possibly related to complexity or outcome)
+CPAKClassification_txt: Text description of CPAK classification
+EBL: Estimated blood loss
+EBL_txt: Text description of estimated blood loss
+Femoral: Code for femoral component or procedure
+Femoral_txt: Text description of femoral component or procedure
+Implant: Code for implant used
+Implant_txt: Text description of implant used
+LocationOpNote: Location mentioned in operative note
+Patella: Code for patellar component or procedure
+Patella_txt: Text description of patellar component or procedure
+PostOpDiagnosis_txt: Text description of post-operative diagnosis
+PreOpDiagnosis_txt: Text description of pre-operative diagnosis
+Tibial: Code for tibial component or procedure
+Tibial_txt: Text description of tibial component or procedure
+PreOpPainBlock: Pre-operative pain block administered
+PreOpPainBlock_txt: Text description of pre-operative pain block
+PFLCRecut: Boolean indicating if posterior femoral lateral condyle was recut
+PFLCRecut_txt: Text description of posterior femoral lateral condyle recut 234-245: Goniometric measurements at various thicknesses (10mm to 20mm) 246-249: Tick marks for various thicknesses (10mm to 14mm)
+PreOpDiagnosisOther: Other pre-operative diagnosis
+DFRMCWasherAmount: Amount of washer used on DFR medial condyle
+DFRMCWasherAmount_txt: Text description of DFR medial condyle washer amount
+DFRLCWasherAmount: Amount of washer used on DFR lateral condyle
+DFRLCWasherAmount_txt: Text description of DFR lateral condyle washer amount
+Ticks10mm: Tick marks at 10mm thickness
+PostOpDiagnosisOther: Other post-operative diagnosis
+
+
+PathwayPID: This likely represents a unique identifier for the patient's care pathway. It's probably a numerical or alphanumerical code used to track a patient's journey through various stages of treatment, from initial consultation through surgery and post-operative care. 
+CID: Case or Clinical Identifier. This is likely a unique number assigned to each surgical case, used for tracking and reference purposes. It may be used to link various documents and data related to a specific surgical procedure. 
+Procedure: This field likely contains a code representing the specific surgical procedure performed. It's probably using a standardized classification system like CPT (Current Procedural Terminology) codes. For example, a total knee arthroplasty might be represented by the code 27447. 
+AdmitScore: This is likely a numerical score given upon admission, possibly related to the patient's condition or risk assessment. It could be based on various factors like comorbidities, functional status, or a specific scoring system used by the hospital. For instance, it might represent an ASA (American Society of Anesthesiologists) physical status classification. 
+Age: The patient's age at the time of the procedure. This is a crucial factor in surgical planning and risk assessment, as older patients may have different considerations for anesthesia, implant choice, and expected outcomes. 
+Alignment: This field likely contains a code or measurement representing the knee alignment. It could indicate conditions like varus (bow-legged) or valgus (knock-kneed) deformities. The alignment is typically measured in degrees of deviation from the neutral mechanical axis. 
+Anesthesia: This field probably contains a code representing the type of anesthesia used. Options might include general anesthesia, regional anesthesia (like spinal or epidural), or local anesthesia with sedation. The choice depends on various factors including patient health, procedure complexity, and expected duration. 
+BMI: Body Mass Index, a measure of body fat based on height and weight. In orthopedic surgery, BMI is important for assessing surgical risks, as obesity can complicate procedures and affect outcomes. A BMI over 30 is generally considered obese. 
+ComponentManufacturer: This field likely contains a code representing the manufacturer of the implant components used in the surgery. Different manufacturers produce various implant systems with unique designs and materials. 
+DischargeDate: The date when the patient was discharged from the hospital after the surgery. This is important for tracking length of stay and can be an indicator of recovery progress and potential complications
+DFRLateralCondyleInitialThickness: The initial thickness of the lateral condyle before distal femoral resection, measured in millimeters. This baseline measurement helps surgeons determine how much bone to resect to achieve the desired final thickness and alignment. 
+DFRMedialCondyleFinalThickness: The final thickness of the medial condyle after distal femoral resection, measured in millimeters. Like its lateral counterpart, this measurement is critical for achieving proper knee balance and function in total knee arthroplasty. 
+DFRMedialCondyleInitialThickness: The initial thickness of the medial condyle before distal femoral resection, measured in millimeters. This initial measurement, compared with the lateral side, can indicate the degree of preoperative deformity and guide surgical planning. 
+EstimatedBloodLoss: The estimated amount of blood lost during the surgery, typically measured in milliliters. This is an important indicator of surgical complexity and can influence postoperative care, including the need for blood transfusions or iron supplementation. 
+FemoralComponent: Code for the type of femoral component used in the knee arthroplasty. This could indicate specific design features such as cruciate-retaining, posterior-stabilized, or constrained condylar designs, each suited for different patient needs and surgical scenarios. 
+FemoralSize: Size code for the femoral component. Proper sizing is crucial for optimal knee function and longevity of the implant. This code likely corresponds to a manufacturer-specific sizing system. 
+IntraoperativeMeds: Codes for medications administered during the surgery. In knee arthroplasty, this might include antibiotics for infection prophylaxis, tranexamic acid for blood loss reduction, or specific pain management medications. 
+OADeformity: Code indicating the type and severity of osteoarthritis deformity present. This could include classifications like Kellgren-Lawrence grades or more specific descriptions of cartilage wear patterns and bony changes. 
+ObesityComplexityModifier: A score or classification indicating how the patient's obesity impacts the complexity of the surgery. This could influence surgical approach, implant choice, and expected outcomes. 
+PatellaComponent: Code for the type of patellar component used, if any. This could indicate whether the patella was resurfaced and what type of implant was used (e.g., all-polyethylene, metal-backed).
+PatellaSize: Size code for the patellar component. Proper sizing of the patellar component is crucial for optimal patellofemoral tracking and function. This code likely corresponds to a manufacturer-specific sizing system. 
+PCLRelease: Indicates whether a posterior cruciate ligament (PCL) release was performed during the surgery. This procedure can be necessary in some knee arthroplasties to achieve proper flexion and balance, particularly in cases with significant deformity or contracture. 
+PFRLateralCondyleFinalThickness: The final thickness of the lateral condyle after posterior femoral resection, measured in millimeters. This measurement is crucial for ensuring proper flexion gap and stability in the replaced knee joint. 
+PFRLateralCondyleInitialThickness: The initial thickness of the lateral condyle before posterior femoral resection, measured in millimeters. This baseline measurement helps guide the amount of bone to be resected posteriorly. 
+PFRMedialCondyleFinalThickness: The final thickness of the medial condyle after posterior femoral resection, measured in millimeters. Along with its lateral counterpart, this measurement is key to achieving proper flexion balance in the knee. 
+PFRMedialCondyleInitialThickness: The initial thickness of the medial condyle before posterior femoral resection, measured in millimeters. This initial measurement helps determine the amount of bone to be resected posteriorly. 
+Poly: Code for the type of polyethylene insert used in the knee replacement. This could indicate characteristics such as fixed vs. mobile bearing, cruciate-retaining vs. posterior-stabilized design, or specific material properties like highly cross-linked polyethylene. 
+PolySize: Size code for the polyethylene insert. Proper sizing of this component is crucial for achieving the correct joint line and stability in the replaced knee. 
+PolyThickness: The thickness of the polyethylene insert, typically measured in millimeters. This measurement is critical for achieving proper knee balance and stability, and can affect the overall joint line of the replaced knee. 
+PostOpDiagnosis: Code for the post-operative diagnosis. While often similar to the pre-operative diagnosis, this field allows for documentation of any unexpected findings or changes in diagnosis that occurred during the surgery.
+
+PostOperativeAlignment: A measurement or classification of the knee alignment achieved after the surgery. This is typically aimed at correcting any pre-operative deformity and achieving neutral mechanical alignment, though some surgeons may aim for kinematic alignment in certain cases. 
+PreOpDiagnosis: Code for the pre-operative diagnosis. In a knee surgery database, this could include conditions such as osteoarthritis, rheumatoid arthritis, post-traumatic arthritis, or failed previous arthroplasty, which are driving the need for the current surgical intervention. 
+PreOperativeAlignment: A measurement or classification of the knee alignment before surgery. This could include quantification of varus or valgus deformity, often measured in degrees, which helps guide surgical planning and implant selection. 
+Sensitin: Likely refers to patient sensitization or allergies, particularly to metals that might be used in implants. This information is crucial for implant selection, as some patients may require hypoallergenic components. 
+Side: Indicates which knee is being operated on (left or right). This basic but crucial information ensures proper site marking and helps prevent wrong-site surgery. 
+TibialComponent: Code for the type of tibial component used in the knee arthroplasty. This could indicate design features such as all-polyethylene vs. metal-backed, fixed vs. mobile bearing, or the presence of stems or augments for additional stability. 
+TibialResection: Measurement of the amount of tibial bone resected during the surgery, typically in millimeters. This is crucial for maintaining proper joint line and ensuring enough bone stock for implant fixation. 
+TibialResectionPosteriorSlope: The angle of posterior slope given to the tibial cut, typically measured in degrees. This affects knee kinematics and stability, particularly in flexion. 
+TibialSize: Size code for the tibial component. Proper sizing is crucial for good coverage of the tibial plateau without overhang, which could cause soft tissue irritation. 
+TourniquetTime: Duration of tourniquet use during surgery, typically measured in minutes. This is important to monitor as prolonged tourniquet time can increase the risk of complications.
+TRLateralFinalThickness: The final thickness of the lateral tibial plateau after resection, measured in millimeters. This measurement is crucial for achieving proper knee balance and alignment in the coronal plane. 
+TRLateralInitialThickness: The initial thickness of the lateral tibial plateau before resection, measured in millimeters. This baseline measurement helps guide the amount of bone to be resected on the lateral side. 
+TRLateralRecutAmount: The amount of additional bone removed from the lateral tibial plateau if a recut was necessary, typically measured in millimeters. This can be required to achieve proper balance or correct alignment issues identified after the initial cut. 
+TRMedialFinalThickness: The final thickness of the medial tibial plateau after resection, measured in millimeters. This measurement, along with its lateral counterpart, is key to achieving proper knee balance and alignment. 
+TRMedialInitialThickness: The initial thickness of the medial tibial plateau before resection, measured in millimeters. This baseline measurement helps determine the amount of bone to be resected on the medial side. 
+TRMedialRecutAmount: The amount of additional bone removed from the medial tibial plateau if a recut was necessary, typically measured in millimeters. Like the lateral recut, this can be required to achieve proper balance or correct alignment issues. 
+ValgusRelease: Indicates the performance and extent of soft tissue releases on the lateral side of the knee to correct a valgus deformity. This could include release of structures like the lateral collateral ligament or iliotibial band. 
+VancomycinDosage: The dose of Vancomycin (an antibiotic) administered, typically measured in milligrams or grams. This is often used for surgical prophylaxis, especially in patients with penicillin allergies or in areas with high prevalence of methicillin-resistant Staphylococcus aureus (MRSA). 
+VarusRelease: Indicates the performance and extent of soft tissue releases on the medial side of the knee to correct a varus deformity. This could include release of structures like the deep medial collateral ligament or posteromedial capsule. 
+Weight: The patient's weight, typically in kilograms or pounds. Along with height (for BMI calculation), this is important for assessing surgical risks and implant selection.
+Baseline: Likely refers to a baseline measurement or score, possibly related to the patient's pre-operative functional status or pain level. This could be used to track improvement after surgery.
+DFRLCRecutAmount: The amount of additional bone removed from the lateral condyle of the distal femur if a recut was necessary, typically measured in millimeters. This can be required to achieve proper flexion/extension gap balance or correct alignment issues.
+DFRMCRecutAmount: The amount of additional bone removed from the medial condyle of the distal femur if a recut was necessary, measured in millimeters. Like its lateral counterpart, this can be needed to achieve proper balance or alignment.
+ComplexityInformation: Likely a field to capture additional details about factors that increase the complexity of the surgery. This could include severe deformities, previous surgeries, or unusual anatomical variations.
+OperativeTimeIncrease: The amount of additional time required for the surgery beyond what was initially planned, typically measured in minutes. This can be an indicator of case complexity or unexpected intraoperative challenges.
+FemoroTibialLinkage: Describes the type of connection between the femoral and tibial components. This could range from unconstrained designs in primary arthroplasties to hinged designs in complex revision cases.
+TibialStemExtension: Indicates the use and possibly the length of a stem extension on the tibial component. Stem extensions are often used in revision surgeries or cases with poor bone quality to provide additional fixation.
+Age2: Possibly a secondary age field, perhaps capturing the patient's age at a different time point (e.g., at follow-up) or used for age-related calculations.
+CPAKClassification: Likely refers to a classification system used in knee arthroplasty, possibly related to the complexity of the procedure or the type of prosthesis used. The exact meaning would depend on the specific system being referenced.
+EBL: Estimated Blood Loss, typically measured in milliliters. This quantifies the amount of blood lost during the surgery, which is important for postoperative management and can be an indicator of surgical complexity.
+Femoral: Likely a more general field related to the femoral component or femoral-side procedures. This could include specific characteristics or techniques used that aren't captured in other fields. 
+Implant: A general field for the type of implant used. In a knee arthroplasty database, this might indicate whether it's a primary, revision, or specialty implant system. 
+Patella: A general field related to patellar procedures or components. This could indicate whether the patella was resurfaced, the type of patellar management performed, or any specific patellar issues encountered. 
+Tibial: Similar to the Femoral field, this likely captures general information about the tibial component or tibial-side procedures not covered in other specific fields. 
+PreOpPainBlock: Indicates the type of pre-operative pain block administered. This could include adductor canal blocks, femoral nerve blocks, or other regional anesthesia techniques used for perioperative pain management. 
+PFLCRecut: Indicates whether a recut of the posterior femoral lateral condyle was performed. This procedure might be necessary to achieve proper flexion gap balance or to correct rotational alignment issues. 
+Goniometric10mmThickness through Goniometric20mmThickness: These fields likely represent knee flexion angles measured with different thicknesses of spacer blocks (from 10mm to 20mm). This information is crucial for assessing and achieving proper knee balance throughout the range of motion. 
+Ticks10mm through Ticks14mm: Possibly represent markings or measurements at different thicknesses (10mm to 14mm), which could be used to assess component positioning or joint line restoration. 
+DFRMCWasherAmount: The thickness of any washer or shim used on the medial condyle of the distal femoral resection, typically measured in millimeters. Washers can be used to fine-tune bone resection and achieve proper alignment. 
+*  DFRLCWasherAmount: Similar to the medial side, this represents the thickness of any washer or shim used on the lateral condyle of the distal femoral resection.
+Potential Questions:
+
+Provide me the number of obese patients (BMI > 30) who required posterior cruciate ligament release during their total knee replacement, grouped by gender. 
+What is the average increase in surgical duration for patients classified as morbidly obese, compared to those with lower obesity classifications? 
+Give me a list of cases where the final medial distal femoral resection thickness was more than 2mm different from the final lateral distal femoral resection thickness, along with their post-operative knee alignment measurements. 
+How many cases required both lateral and medial soft tissue releases, and what was their average pre-operative knee alignment compared to their post-operative knee alignment? 
+Provide the percentage of cases where the posterior tibial slope cut was greater than 7 degrees, broken down by tibial implant design. 
+What is the correlation between intraoperative blood loss and tourniquet duration for patients who received a large femoral component (size 5 or larger)? 
+Give me the top 5 surgeons (by number of cases) who have performed knee replacements on patients with severe osteoarthritis, along with their average post-operative knee alignment outcomes. 
+What percentage of rheumatoid arthritis cases required a tibial stem extension, and how does this compare to osteoarthritis cases? 
+Provide a list of cases where the combined thickness of the polyethylene insert and tibial bone resection was less than 18mm, along with their one-year follow-up scores. 
+What is the average difference between the final medial and lateral posterior femoral resection thicknesses in cases where an additional tibial varus/valgus recut was performed, compared to cases where it wasn't?
+What is the average difference in tourniquet time between cases using computer-assisted navigation and those using traditional instrumentation, focusing on patients with a body mass index over 35? 
+For patients who received a highly cross-linked polyethylene insert, what is the correlation between insert thickness and post-operative range of motion at 6 months? 
+Compare the rate of lateral retinacular release in patients with pre-operative valgus deformity versus those with varus deformity, controlling for patellar component size. 
+What percentage of cases with severe pre-operative flexion contracture (>15 degrees) required posterior femoral condyle recuts, and how did this affect post-operative flexion? 
+Analyze the relationship between surgeon experience (number of cases performed) and the frequency of tibial component size changes intraoperatively. 
+For revision cases, what is the average additional operative time when tibial stem extensions are used compared to when they are not used? 
+Compare the post-operative alignment outcomes for patients who received patient-specific instrumentation versus off-the-shelf instrumentation, stratified by pre-operative deformity severity. 
+What is the incidence of perioperative antibiotic protocol deviation (type or dosage) in patients with reported penicillin allergies, and is there a correlation with post-operative infection rates? 
+Analyze the trend of posterior-stabilized versus cruciate-retaining implant usage over the past five years, correlated with average patient age and activity level. 
+For patients who underwent bilateral total knee arthroplasties (staged or simultaneous), compare the surgical parameters (e.g., component sizes, bone resection amounts, soft tissue releases) between the left and right knees.
+What is the average deviation from the patient's native joint line (as measured pre-operatively) when using our kinematically aligned implant compared to traditionally aligned implants from competitors? 
+Compare the post-operative Q-angle measurements between patients who received our kinematically aligned implant versus those who received mechanically aligned implants, stratified by pre-operative anatomical variation. 
+What percentage of patients with our kinematically aligned implant achieved neutral mechanical alignment (0¡ ± 3¡) without soft tissue releases, compared to patients with traditional implants? 
+Analyze the correlation between the femoral component rotation (as measured by posterior condylar axis) and patient-reported outcomes at 1 year post-operation for our kinematically aligned implants versus competitor implants. 
+Compare the frequency and extent of tibial component overhang (medial, lateral, anterior, and posterior) between our kinematically aligned implant system and traditional mechanically aligned systems, and correlate this with patient-reported pain scores at 6 months post-operation.

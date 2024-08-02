@@ -1,0 +1,61 @@
+# Virtual Environments
+**/venv/
+**/env/
+**/.venv/
+**/myenv/
+**/streamlit_env/
+
+# Python
+*.py[cod]
+**/__pycache__/
+*.so
+
+# Packages
+*.egg
+*.egg-info
+dist
+build
+eggs
+parts
+bin
+var
+sdist
+develop-eggs
+.installed.cfg
+lib
+lib64
+
+# Installer logs
+pip-log.txt
+
+# Unit test / coverage reports
+.coverage
+.tox
+nosetests.xml
+
+# Translations
+*.mo
+
+# Mr Developer
+.mr.developer.cfg
+.project
+.pydevproject
+
+# SQLite databases
+*.db
+*.sqlite3
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Large files and directories
+**/site-packages/
+**/libtorch_cpu.dylib
+**/libtorch_python.dylib
+**/libarrow*.dylib
