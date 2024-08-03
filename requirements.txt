@@ -1,9 +1,8 @@
-streamlit
-st-aggrid
-reportlab
-anthropic
-sqlite3
+streamlit==1.37.0
 pandas
 plotly
+anthropic
+streamlit-aggrid
+reportlab
 fuzzywuzzy
 python-Levenshtein
