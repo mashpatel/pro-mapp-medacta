@@ -62,7 +62,7 @@ def logout():
     st.session_state.logged_in = False
     st.session_state.username = ''
     st.session_state.bg_color = '#201E45'  # Revert to dark background
-    st.experimental_rerun()
+    st.rerun()
 
 def show_login():
     if 'logged_in' not in st.session_state:
@@ -97,7 +97,7 @@ def show_login():
                 st.session_state.username = username
                 st.session_state.bg_color = 'white'  # Change background to white
                 st.success("Logged In Successfully")
-                st.experimental_rerun()
+                st.rerun()
             else:
                 st.sidebar.warning("Incorrect Username/Password")
     

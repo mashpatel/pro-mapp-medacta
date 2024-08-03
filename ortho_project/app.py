@@ -1,6 +1,6 @@
 import streamlit as st
 import os
-from streamlit_aggrid import AgGrid, GridOptionsBuilder, GridUpdateMode, DataReturnMode
+from st_aggrid import AgGrid, GridOptionsBuilder, GridUpdateMode, DataReturnMode
 from io import BytesIO
 from reportlab.pdfgen import canvas
 from reportlab.lib.pagesizes import letter
@@ -258,7 +258,7 @@ def show_prompt_screen():
     if st.button("Clear", key="clear_button"):
         st.session_state.user_input = ""
         st.session_state.additional_rules = ""
-        st.experimental_rerun()
+        st.rerun()
 
     # Update session state
     st.session_state.user_input = user_input
@@ -665,7 +665,7 @@ def main_app():
             for match, score in matches:
                 if st.button(match, key=match, help="Click to select this question"):
                     st.session_state.selected_question = match
-                    st.experimental_rerun()
+                    st.rerun()
     
     if st.session_state.selected_question:
         st.markdown('<p class="big-font">Selected Question</p>', unsafe_allow_html=True)
@@ -840,7 +840,7 @@ def eav_searcher():
         if st.button("Reset Attribute Search", key="reset_attribute_button"):
             st.session_state.selected_attribute = ""
             st.session_state.selected_value = ""
-            st.experimental_rerun()
+            st.rerun()
         
         attributes = get_all_attributes()
         selected_attribute = st.selectbox("Select Attribute:", options=[""] + attributes, index=0, key="attribute_select")
@@ -858,7 +858,7 @@ def eav_searcher():
                         for pathway in pathways:
                             if st.button(f"PathwayPID: {pathway}", key=f"pathway_{pathway}"):
                                 st.session_state.patient_id = pathway
-                                st.experimental_rerun()
+                                st.rerun()
                 else:
                     st.warning(f"No pathways found with {selected_attribute} = {selected_value}")
 
@@ -868,7 +868,7 @@ def eav_searcher():
             st.session_state.patient_id = ""
         if st.button("Reset Pathway Search", key="reset_pathway_button"):
             st.session_state.patient_id = ""
-            st.experimental_rerun()
+            st.rerun()
         patient_id = st.text_input("Enter Patient ID:", value=st.session_state.patient_id)
         st.session_state.patient_id = patient_id
         
