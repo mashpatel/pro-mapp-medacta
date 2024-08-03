@@ -13,6 +13,7 @@
    ENV/
    env.bak/
    venv.bak/
+   ortho_project/venv/
    
    # Python cache
    __pycache__/
@@ -47,3 +48,20 @@
    .streamlit/secrets.toml
    
    # Add any other project-specific files or directories to ignore
+   # Distribution / packaging
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
