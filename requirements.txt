@@ -1,7 +1,7 @@
 streamlit==1.37.0
-pandas
-plotly
-anthropic
-streamlit-aggrid
-reportlab==4.2.2
-fuzzywuzzy==0.18.0
+pandas==2.0.3
+plotly==5.15.0
+anthropic==0.3.6
+streamlit-aggrid==0.3.4
+reportlab==3.6.12
+pillow==9.5.0
