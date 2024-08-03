@@ -1,9 +1,0 @@
-streamlit
-st-aggrid
-reportlab
-anthropic
-sqlite3
-pandas
-plotly
-fuzzywuzzy
-python-Levenshtein
