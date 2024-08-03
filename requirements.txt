@@ -3,6 +3,5 @@ pandas
 plotly
 anthropic
 streamlit-aggrid
-reportlab
-fuzzywuzzy
-python-Levenshtein
+reportlab==4.2.2
+fuzzywuzzy==0.18.0
