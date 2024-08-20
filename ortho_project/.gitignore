@@ -1,0 +1,36 @@
+# Python byte-code
+__pycache__/
+*.py[cod]
+*.class
+
+# C extensions
+*.so
+
+# Virtual environments
+venv/
+env/
+virtualenv/
+streamlit_env/
+my_env/
+new_venv/
+
+# Ignore all contents of streamlit_env
+streamlit_env/**
+
+# Ignore all __pycache__ directories
+**/__pycache__/
+
+# Ignore specific packages
+**/site-packages/**/__pycache__/
+
+# Ignore all .pyc files
+**/*.pyc
+
+# Ignore all .pyo files
+**/*.pyo
+
+# Ignore all .pyd files
+**/*.pyd
+
+# Specific ignores for your project
+lib/python3.12/site-packages/**/__pycache__/
