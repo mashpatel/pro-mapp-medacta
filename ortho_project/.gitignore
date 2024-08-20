@@ -34,3 +34,4 @@ streamlit_env/**
 
 # Specific ignores for your project
 lib/python3.12/site-packages/**/__pycache__/
+.env
