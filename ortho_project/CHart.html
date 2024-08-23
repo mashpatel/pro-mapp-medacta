@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lateral Condyle Thickness Distribution</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div style="width: 80%; margin: auto;">
+        <canvas id="thicknessChart"></canvas>
+    </div>
+
+    <script>
+        const data = [{"measurementType":"Initial","count":341,"range":"8-9mm","status":"Unworn"},{"measurementType":"Initial","count":4,"range":"6-7mm","status":"Unworn"},{"measurementType":"Initial","count":50,"range":"6-7mm","status":"Worn"},{"measurementType":"Initial","count":13,"range":"7-8mm","status":"Unworn"},{"measurementType":"Initial","count":1,"range":"<6mm","status":"Unworn"},{"measurementType":"Initial","count":2,"range":"7-8mm","status":"Worn"},{"measurementType":"Initial","count":2,"range":"<6mm","status":"Worn"},{"measurementType":"Initial","count":2,"range":"8-9mm","status":"Worn"},{"measurementType":"Final","count":349,"range":"8-9mm","status":"Unworn"},{"measurementType":"Final","count":50,"range":"6-7mm","status":"Worn"},{"measurementType":"Final","count":4,"range":"9-10mm","status":"Unworn"},{"measurementType":"Final","count":5,"range":"7-8mm","status":"Unworn"},{"measurementType":"Final","count":2,"range":"7-8mm","status":"Worn"},{"measurementType":"Final","count":1,"range":"6-7mm","status":"Unworn"},{"measurementType":"Final","count":3,"range":"8-9mm","status":"Worn"},{"measurementType":"Final","count":1,"range":"<6mm","status":"Worn"}];
+
+        const ranges = ['<6mm', '6-7mm', '7-8mm', '8-9mm', '9-10mm'];
+        
+        const initialUnworn = ranges.map(range => data.find(d => d.measurementType === 'Initial' && d.status === 'Unworn' && d.range === range)?.count || 0);
+        const initialWorn = ranges.map(range => data.find(d => d.measurementType === 'Initial' && d.status === 'Worn' && d.range === range)?.count || 0);
+        const finalUnworn = ranges.map(range => data.find(d => d.measurementType === 'Final' && d.status === 'Unworn' && d.range === range)?.count || 0);
+        const finalWorn = ranges.map(range => data.find(d => d.measurementType === 'Final' && d.status === 'Worn' && d.range === range)?.count || 0);
+
+        const ctx = document.getElementById('thicknessChart').getContext('2d');
+        new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: ranges,
+                datasets: [
+                    {
+                        label: 'Initial Unworn',
+                        data: initialUnworn,
+                        backgroundColor: 'rgba(75, 192, 192, 0.6)',
+                        borderColor: 'rgba(75, 192, 192, 1)',
+                        borderWidth: 1
+                    },
+                    {
+                        label: 'Initial Worn',
+                        data: initialWorn,
+                        backgroundColor: 'rgba(255, 99, 132, 0.6)',
+                        borderColor: 'rgba(255, 99, 132, 1)',
+                        borderWidth: 1
+                    },
+                    {
+                        label: 'Final Unworn',
+                        data: finalUnworn,
+                        backgroundColor: 'rgba(54, 162, 235, 0.6)',
+                        borderColor: 'rgba(54, 162, 235, 1)',
+                        borderWidth: 1
+                    },
+                    {
+                        label: 'Final Worn',
+                        data: finalWorn,
+                        backgroundColor: 'rgba(255, 206, 86, 0.6)',
+                        borderColor: 'rgba(255, 206, 86, 1)',
+                        borderWidth: 1
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'Thickness Range'
+                        }
+                    },
+                    y: {
+                        beginAtZero: true,
+                        title: {
+                            display: true,
+                            text: 'Count'
+                        }
+                    }
+                },
+                plugins: {
+                    title: {
+                        display: true,
+                        text: 'Lateral Condyle Thickness Distribution'
+                    },
+                    legend: {
+                        position: 'top',
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>

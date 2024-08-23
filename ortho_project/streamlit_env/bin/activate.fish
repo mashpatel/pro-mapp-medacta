@@ -33,7 +33,7 @@ end
 # Unset irrelevant variables.
 deactivate nondestructive
 
-set -gx VIRTUAL_ENV "/Users/mashpatel/Projects/ortho_project/streamlit_env"
+set -gx VIRTUAL_ENV "/Users/mashpatel/Projects/pro-mapp-projects/ortho_project/streamlit_env"
 
 set -gx _OLD_VIRTUAL_PATH $PATH
 set -gx PATH "$VIRTUAL_ENV/bin" $PATH

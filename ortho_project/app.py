@@ -5,8 +5,24 @@ from io import BytesIO
 from reportlab.pdfgen import canvas
 from reportlab.lib.pagesizes import letter
 from anthropic import Anthropic
+from langchain.graphs import Neo4jGraph
+from langchain.chains import GraphCypherQAChain, LLMChain
+from langchain.chat_models import ChatAnthropic
+from langchain.prompts import PromptTemplate
+from anthropic import Anthropic, HUMAN_PROMPT, AI_PROMPT
+from langchain_anthropic import ChatAnthropic
+from langchain.schema import HumanMessage, SystemMessage
+from langchain.callbacks.base import BaseCallbackHandler
+
+from langchain.callbacks.streaming_stdout import StreamingStdOutCallbackHandler
+from neo4j import GraphDatabase
+from graph_scheme import get_graph_schema
+from dotenv import load_dotenv
 import sqlite3
 import base64
+import logging
+import re
+import json
 import pandas as pd
 import plotly.express as px
 import plotly.graph_objects as go
@@ -50,8 +66,561 @@ st.markdown(
     unsafe_allow_html=True
 )
 
+# Load environment variables
+load_dotenv()
 # Initialize Anthropic client
 anthropic = Anthropic(api_key=os.environ.get("ANTHROPIC_API_KEY"))
+
+# Initialize Anthropic LLM (Claude 3.5 Sonnet)
+llm = ChatAnthropic(model_name="claude-3-sonnet-20240229", temperature=0)
+
+# Neo4j connection details
+NEO4J_URI = os.getenv("NEO4J_URI")
+NEO4J_USER = os.getenv("NEO4J_USER")
+NEO4J_PASSWORD = os.getenv("NEO4J_PASSWORD")
+
+# Initialize Neo4j graph
+graph = Neo4jGraph(
+    url=NEO4J_URI,
+    username=NEO4J_USER,
+    password=NEO4J_PASSWORD
+)
+
+# Create the GraphCypherQAChain
+chain = GraphCypherQAChain.from_llm(
+    llm,
+    graph=graph,
+    verbose=True
+)
+
+# Prompt template for generating Cypher queries
+cypher_template = """
+You are an AI expert specializing in converting natural language queries to Cypher queries for a Neo4j graph database in a medical context. Generate a precise and efficient Cypher query based on the given natural language query and the provided graph schema.
+
+Graph Schema:
+{schema}
+
+Natural language query: {query}
+
+Key Guidelines:
+1. Start with MATCH for pattern matching. Use a single WHERE clause for all conditions.
+2. Use case-insensitive matching (=~ '(?i)...') for string comparisons.
+3. Handle unit conversions and null values in CASE statements within WITH clauses.
+4. Use OPTIONAL MATCH for potentially missing relationships.
+5. Aggregate in the RETURN clause without using GROUP BY.
+6. Always end with LIMIT 100 unless specified otherwise.
+7. Ensure property names and relationships match the schema exactly.
+8. Use relationships between nodes in both directions if more appropriate.
+Specific Instructions:
+1. For gender, use: p.Gender_txt =~ '(?i)male' or '(?i)female'
+2. For age comparisons: toInteger(p.Age) > X
+3. For BMI or other numeric comparisons: toFloat(p.BMI) > X
+4. When searching names, locations, medications or any other text search always use a fuzzy match
+5. Convert units when necessary (e.g., inches to cm, lbs to kg)
+6. For date comparisons, use the following pattern:
+   - apoc.date.parse(p.DateProperty, 'ms', 'yyyy-MM-dd') > apoc.date.parse('2022-01-01', 'ms', 'yyyy-MM-dd')
+7. For date calculations or extractions, use:
+   - apoc.date.field(apoc.date.parse(p.DateProperty, 'ms', 'yyyy-MM-dd'), 'year') as year
+8. For numeric calculations on text fields, always use:
+   - toFloat(p.NumericProperty) or toInteger(p.NumericProperty)
+9. When aggregating or performing calculations on numeric fields stored as text, use:
+   - avg(toFloat(p.NumericProperty)) as avgValue
+10. For date ranges, use:
+    - apoc.date.parse(p.DateProperty, 'ms', 'yyyy-MM-dd') >= apoc.date.parse('2022-01-01', 'ms', 'yyyy-MM-dd') AND 
+      apoc.date.parse(p.DateProperty, 'ms', 'yyyy-MM-dd') < apoc.date.parse('2023-01-01', 'ms', 'yyyy-MM-dd')
+11. Always alias all expressions and property accesses in WITH clauses, even if they're not transformed.
+12. When using multiple WITH clauses, ensure all fields used in subsequent clauses are properly aliased in preceding clauses.
+13. Use WHERE clauses early in the query to filter out null values before performing calculations or comparisons.
+
+Critical Query Structure Guidelines:
+1. Always alias ALL node properties in WITH clauses, even if they're not being transformed.
+   Correct:   WITH n, n.property AS property_alias
+   Incorrect: WITH n, n.property
+
+2. Use early WHERE clauses to filter out null values before any calculations.
+   Example: WHERE n.property1 IS NOT NULL AND n.property2 IS NOT NULL
+
+3. In RETURN clauses, always use aliased property names from previous WITH clauses.
+   Correct:   RETURN avg(toFloat(property_alias)) AS avg_property
+   Incorrect: RETURN avg(toFloat(n.property)) AS avg_property
+
+4. When using CASE statements in WITH clauses, always alias the result.
+   Example: 
+   WITH n, 
+     CASE 
+       WHEN condition THEN value1 
+       ELSE value2 
+     END AS case_result
+
+5. For every property used in calculations or comparisons, ensure it's aliased in a WITH clause first.
+
+6. When working with numeric properties stored as text:
+   a. Always use toFloat() or toInteger() for conversion.
+   b. Handle potential NULL or invalid text values using CASE statements.
+   c. Use coalesce() to provide default values for NULL results in calculations.
+
+Example of handling text-stored numeric properties:
+MATCH (n:Node)
+WHERE n.textProperty IS NOT NULL
+WITH n,
+  CASE
+    WHEN n.textProperty =~ '^[0-9]+(\.[0-9]+)?$' 
+    THEN toFloat(n.textProperty)
+    ELSE NULL
+  END AS numericValue
+WITH 
+  CASE 
+    WHEN numericValue IS NOT NULL THEN 'Valid' 
+    ELSE 'Invalid' 
+  END AS valueStatus,
+  numericValue
+RETURN
+  valueStatus,
+  coalesce(avg(numericValue), 0) AS averageValue,
+  count(*) AS totalCount
+
+7. When working with numeric properties stored as text with units:
+   a. Use SUBSTRING and REPLACE functions to extract the numeric part.
+   b. Convert the extracted part to a number using toFloat() or toInteger().
+   c. Handle null values and potential invalid formats.
+   d. Use coalesce() to provide default values for NULL results in calculations.
+
+Example of handling text-stored numeric properties with units:
+MATCH (n:Node)
+WITH n,
+  CASE
+    WHEN n.measurementProperty IS NULL THEN NULL
+    WHEN n.measurementProperty =~ '^[0-9]+mm$' 
+    THEN toInteger(REPLACE(n.measurementProperty, 'mm', ''))
+    ELSE NULL
+  END AS numericValue
+WITH 
+  CASE 
+    WHEN numericValue IS NOT NULL THEN 'Valid' 
+    ELSE 'Invalid' 
+  END AS valueStatus,
+  numericValue
+RETURN
+  valueStatus,
+  coalesce(avg(numericValue), 0) AS averageValue,
+  count(*) AS totalCount
+
+Specific data handling for thickness measurements:
+MATCH (fr:FemoralResection)
+WHERE fr.DFRLateralCondyleStatus IS NOT NULL
+WITH 
+  fr,
+  fr.DFRLateralCondyleStatus AS condyle_status,
+  CASE
+    WHEN fr.DFRLateralCondyleInitialThickness_txt =~ '^[0-9]+mm$'
+    THEN toInteger(REPLACE(fr.DFRLateralCondyleInitialThickness_txt, 'mm', ''))
+    ELSE NULL
+  END AS initial_thickness,
+  CASE
+    WHEN fr.DFRLateralCondyleFinalThickness_txt =~ '^[0-9]+mm$'
+    THEN toInteger(REPLACE(fr.DFRLateralCondyleFinalThickness_txt, 'mm', ''))
+    ELSE NULL
+  END AS final_thickness
+WITH 
+  condyle_status,
+  initial_thickness,
+  final_thickness
+RETURN
+  condyle_status,
+  avg(initial_thickness) AS avg_initial_thickness,
+  avg(final_thickness) AS avg_final_thickness,
+  count(*) AS total_count
+ORDER BY condyle_status
+LIMIT 100;
+
+8. Always include diagnostic counts in queries dealing with potentially problematic data:
+   - Total count of records
+   - Count of valid (non-NULL) converted values
+   This helps identify potential data quality issues and conversion problems.
+
+9. When dealing with averages of potentially problematic numeric data, avoid using coalesce() to replace NULL with 0, as this can skew results. Instead, let avg() handle NULLs naturally and provide count information for context.
+
+Critical Relationship Patterns:
+1. Patient to Procedure: (p:Patient)-[:UNDERWENT]->(pr:Procedure)
+2. Procedure to Location: (pr:Procedure)-[:PERFORMED_AT]->(l:Location)
+3. Location to SurgicalTeam: (l:Location)-[:HAS_TEAM]->(st:SurgicalTeam)
+4. Full path: (p:Patient)-[:UNDERWENT]->(pr:Procedure)-[:PERFORMED_AT]->(l:Location)-[:HAS_TEAM]->(st:SurgicalTeam)
+
+10. When calculating ratios or percentages:
+    a. Use CASE statements to create boolean values (0 or 1) for each category.
+    b. Sum these values to get counts for each category.
+    c. Calculate ratios using floating-point division.
+    d. Use round() function to limit decimal places in the result.
+
+Example of correct ratio calculation:
+MATCH (p:Patient)
+WITH 
+  CASE WHEN p.Gender_txt =~ '(?i)male' THEN 1 ELSE 0 END AS is_male,
+  CASE WHEN p.Gender_txt =~ '(?i)female' THEN 1 ELSE 0 END AS is_female
+WITH 
+  sum(is_male) AS male_count,
+  sum(is_female) AS female_count,
+  count(*) AS total_count
+RETURN
+  round(toFloat(male_count) / total_count, 2) AS male_ratio,
+  round(toFloat(female_count) / total_count, 2) AS female_ratio,
+  total_count
+
+Common Pitfalls to Avoid:
+1. Don't assume direct relationships between nodes that are not connected in the schema.
+2. Always use COUNT(DISTINCT ...) when counting relationships to avoid overcounting.
+3. Check for null values in critical fields before performing operations on them.
+4. Use OPTIONAL MATCH for relationships that may not always exist to avoid losing data.
+
+
+Output only the Cypher query, ending with a semicolon.
+"""
+
+cypher_prompt = PromptTemplate(
+    input_variables=["schema", "query"],
+    template=cypher_template
+)
+
+def execute_cypher_query(query):
+    with GraphDatabase.driver(NEO4J_URI, auth=(NEO4J_USER, NEO4J_PASSWORD)) as driver:
+        with driver.session() as session:
+            result = session.run(query)
+            return [dict(record) for record in result]
+
+def extract_cypher_query(generated_text):
+    logging.info(f"Extracting Cypher query from: {generated_text[:100]}...")  # Log first 100 chars
+
+    # Regular expression to match Cypher query, including multi-line
+    cypher_pattern = r'(?s)(MATCH|MERGE|CREATE|CALL|UNWIND).*?;'
+    
+    match = re.search(cypher_pattern, generated_text, re.IGNORECASE | re.DOTALL)
+    
+    if match:
+        full_query = match.group(0)
+        logging.info(f"Found Cypher query: {full_query}")
+        
+        # Remove any comments
+        full_query = re.sub(r'//.*?(\n|$)', '', full_query)
+        full_query = re.sub(r'/\*[\s\S]*?\*/', '', full_query)
+        
+        # Fix EXISTS clauses (be more careful with this)
+        full_query = re.sub(r'EXISTS\s*\(\s*(.+?)\s*\)\s*WHERE', r'EXISTS( \1 WHERE', full_query)
+        
+        # Clean up whitespace
+        full_query = re.sub(r'\s+', ' ', full_query).strip()
+        
+        logging.info(f"Cleaned Cypher query: {full_query}")
+        return full_query
+    else:
+        logging.warning("No valid Cypher query found in the generated text.")
+        return None
+
+class TokenCountingCallback(BaseCallbackHandler):
+    def __init__(self):
+        super().__init__()
+        self.token_count = 0
+
+    def on_llm_start(self, serialized, prompts, **kwargs):
+        for prompt in prompts:
+            self.token_count += len(prompt.split())
+
+    def on_llm_end(self, response, **kwargs):
+        for generation in response.generations:
+            self.token_count += len(generation[0].text.split())
+
+def display_langchain_api_info(api_info):
+    sonnet_purple = "#6B46C1"
+    sonnet_light_purple = "#9F7AEA"
+    
+    st.markdown(f"""
+    <style>
+        .api-info-langchain {{
+            font-size: 0.9rem;
+            color: {sonnet_purple};
+        }}
+        .api-info-langchain .metric-value {{
+            font-weight: bold;
+            color: {sonnet_light_purple};
+        }}
+        .api-info-langchain .footnote {{
+            font-size: 0.7rem;
+            color: #718096;
+            font-style: italic;
+        }}
+    </style>
+    """, unsafe_allow_html=True)
+    
+    with st.expander("LangChain API Call Information", expanded=False):
+        st.markdown('<div class="api-info-langchain">', unsafe_allow_html=True)
+        
+        col1, col2 = st.columns(2)
+        
+        with col1:
+            st.markdown(f"**Model Used:** <span class='metric-value'>{api_info['model']}</span>", unsafe_allow_html=True)
+            st.markdown(f"**Total Tokens:** <span class='metric-value'>{api_info['total_tokens']}</span>", unsafe_allow_html=True)
+            st.markdown(f"**Execution Time:** <span class='metric-value'>{api_info['execution_time']:.2f} seconds</span>", unsafe_allow_html=True)
+        
+        with col2:
+            st.markdown(f"**Cost:** <span class='metric-value'>${api_info['cost']:.6f}</span>", unsafe_allow_html=True)
+        
+        st.markdown('<p class="footnote">Note: Costs are approximate and based on Claude 3 Sonnet pricing. Token count and execution times may vary.</p>', unsafe_allow_html=True)
+        st.markdown('</div>', unsafe_allow_html=True)
+
+def verify_neo4j_connection():
+    uri = os.getenv("NEO4J_URI")
+    user = os.getenv("NEO4J_USER")
+    password = os.getenv("NEO4J_PASSWORD")
+
+    if not all([uri, user, password]):
+        return False, "Neo4j environment variables are not set correctly."
+
+    try:
+        with GraphDatabase.driver(uri, auth=(user, password)) as driver:
+            with driver.session() as session:
+                result = session.run("RETURN 1 AS test")
+                result.single()
+        return True, "Successfully connected to Neo4j database."
+    except Exception as e:
+        return False, f"Failed to connect to Neo4j database: {str(e)}"
+
+# Add this to your main function or Streamlit app
+connection_success, connection_message = verify_neo4j_connection()
+if not connection_success:
+    st.error(connection_message)
+else:
+    st.success(connection_message)
+
+
+def graph_qa_page():
+    st.title("Graph Question and Answer")
+
+    # Initialize the database
+    init_db()
+
+    # Initialize session state variables
+    if 'selected_action' not in st.session_state:
+        st.session_state.selected_action = None
+    if 'query_executed' not in st.session_state:
+        st.session_state.query_executed = False
+    if 'clear_input' not in st.session_state:
+        st.session_state.clear_input = False
+
+    # Main buttons at the top
+    col1, col2, col3 = st.columns(3)
+    with col1:
+        if st.button("Clear", key="clear_top"):
+            st.session_state.selected_action = None
+            st.session_state.query_executed = False
+            st.session_state.user_query = ""
+            st.rerun()
+    with col2:
+        if st.button("Run Pre-Configured Query"):
+            st.session_state.selected_action = "preconfigured"
+    with col3:
+        if st.button("Ask a New Question"):
+            st.session_state.selected_action = "new_question"
+
+    if st.session_state.selected_action == "preconfigured":
+        run_preconfigured_query()
+    elif st.session_state.selected_action == "new_question":
+        ask_new_question_flow()
+
+    # Clear button at the bottom (only shown after a query has been executed)
+    if st.session_state.query_executed:
+        if st.button("Clear", key="clear_bottom"):
+            st.session_state.selected_action = None
+            st.session_state.query_executed = False
+            st.session_state.user_query = ""
+            st.rerun()
+
+def run_preconfigured_query():
+    queries = get_preconfigured_queries()
+    if queries:
+        selected_query = st.selectbox("Select a pre-configured query:", 
+                                      [f"{q[0]}: {q[1]}" for q in queries])
+        if selected_query:
+            query_id = int(selected_query.split(":")[0])
+            conn = sqlite3.connect('Medacta.db')
+            c = conn.cursor()
+            c.execute("SELECT cypher_query FROM Graph_queries WHERE id = ?", (query_id,))
+            cypher_query = c.fetchone()[0]
+            conn.close()
+            
+            # Execute the selected Cypher query
+            result = execute_cypher_query(cypher_query)
+            if result is not None:
+                st.subheader("Query Result:")
+                st.write(result)
+                
+                # Expandable box for the Cypher query
+                with st.expander("View Cypher Query", expanded=False):
+                    st.code(cypher_query, language="cypher")
+                
+                st.session_state.query_executed = True
+            else:
+                st.error("Error executing the Cypher query.")
+    else:
+        st.warning("No pre-configured queries available.")
+
+def ask_new_question_flow():
+    # Get graph schema
+    schema_json = get_graph_schema()
+    schema = json.loads(schema_json)
+
+    if "error" in schema:
+        st.error(f"Error fetching schema: {schema['error']}")
+        return
+
+    # Display the schema in an expander
+    with st.expander("View Graph Schema", expanded=False):
+        st.json(schema)
+
+    # User input
+    user_query = st.text_input("Enter your question about the graph data:", key="user_query")
+
+    if user_query:
+        try:
+            # Initialize the token counting callback
+            token_callback = TokenCountingCallback()
+
+            # Reinitialize the LLM and chains with the callback
+            llm = ChatAnthropic(model="claude-3-sonnet-20240229", temperature=0, callbacks=[token_callback])
+            
+            cypher_chain = LLMChain(llm=llm, prompt=cypher_prompt)
+            chain = GraphCypherQAChain.from_llm(
+                llm,
+                graph=graph,
+                verbose=True,
+                cypher_prompt=cypher_prompt
+            )
+
+            # Generate Cypher query
+            cypher_generation_start = time.time()
+            generated_text = cypher_chain.run(schema=schema_json, query=user_query)
+            cypher_generation_end = time.time()
+
+            print("Generated text:", generated_text)
+            logging.info(f"Generated text: {generated_text}")
+
+            # Extract valid Cypher query
+            cypher_query = generated_text
+            print("Extracted Cypher query:", cypher_query)
+            logging.info(f"Extracted Cypher query: {cypher_query}")
+
+            if cypher_query is None:
+                st.warning("Unable to generate a valid Cypher query based on the provided schema and query.")
+                st.error("Generated content:")
+                st.code(generated_text)
+            else:
+                # Execute Cypher query
+                execution_start = time.time()
+                try:
+                    result = execute_cypher_query(cypher_query)
+                    execution_end = time.time()
+
+                    if result is None:
+                        st.error("Error executing the Cypher query. Please check the Neo4j connection and query syntax.")
+                    elif len(result) == 0:
+                        st.warning("The query executed successfully, but returned no results.")
+                        # Expandable box for the generated text (including explanations)
+                        with st.expander("View Generated Text", expanded=False):
+                            st.code(generated_text, language="markdown")
+
+                        # Expandable box for the extracted Cypher query
+                        with st.expander("View Extracted Cypher Query", expanded=False):
+                            st.code(cypher_query, language="cypher")
+                    else:
+                        # Display the result
+                        st.subheader("Query Result:")
+                        st.write(result)
+
+                        # Expandable box for the full prompt
+                        with st.expander("View Full Prompt", expanded=False):
+                            st.code(cypher_prompt.format(schema=schema_json, query=user_query), language="markdown")
+
+                        # Expandable box for the generated text (including explanations)
+                        with st.expander("View Generated Text", expanded=False):
+                            st.code(generated_text, language="markdown")
+
+                        # Expandable box for the extracted Cypher query
+                        with st.expander("View Extracted Cypher Query", expanded=False):
+                            st.code(cypher_query, language="cypher")
+
+                        # Calculate total execution time
+                        total_time = (cypher_generation_end - cypher_generation_start) + \
+                                     (execution_end - execution_start)
+
+                        # Prepare API info using the callback data
+                        total_tokens = token_callback.token_count
+                        api_info = {
+                            "model": "claude-3-sonnet-20240229",
+                            "total_tokens": total_tokens,
+                            "execution_time": total_time,
+                            "cost": calculate_cost(total_tokens, total_tokens)
+                        }
+
+                        display_langchain_api_info(api_info)
+
+                        # Buttons for Explain Query and Add to KnowledgeHub
+                        col1, col2 = st.columns(2)
+                        with col1:
+                            if st.button("Explain Query", key="explain_query"):
+                                explanation_prompt = f"""
+                                Please explain the following Cypher query in plain English. 
+                                Break down each part of the query and describe what it's doing in simple terms.
+                                Summarise with a description in simple terms of what the query shows.
+                                
+                                Cypher Query:
+                                {cypher_query}
+                                
+                                Explanation:
+                                """
+                                
+                                explanation = llm.predict(explanation_prompt)
+                                
+                                with st.expander("Query Explanation", expanded=True):
+                                    st.write(explanation)
+
+                        with col2:
+                            if st.button("Add Question to KnowledgeHub", key="add_to_knowledgehub"):
+                                add_query_to_db(user_query, cypher_query)
+                                st.success("Query added to KnowledgeHub successfully!")
+
+                    st.session_state.query_executed = True
+
+                except Exception as e:
+                    st.error(f"Error executing Cypher query: {str(e)}")
+                    st.code(cypher_query, language="cypher")
+
+        except Exception as e:
+            st.error(f"An error occurred: {str(e)}")
+            logging.error(f"Error in graph_qa_page: {str(e)}", exc_info=True)
+
+def init_db():
+    conn = sqlite3.connect('Medacta.db')
+    c = conn.cursor()
+    c.execute('''CREATE TABLE IF NOT EXISTS Graph_queries
+                 (id INTEGER PRIMARY KEY AUTOINCREMENT,
+                  question TEXT,
+                  cypher_query TEXT)''')
+    conn.commit()
+    conn.close()
+
+def add_query_to_db(question, cypher_query):
+    conn = sqlite3.connect('Medacta.db')
+    c = conn.cursor()
+    c.execute("INSERT INTO Graph_queries (question, cypher_query) VALUES (?, ?)", (question, cypher_query))
+    conn.commit()
+    conn.close()
+
+def get_preconfigured_queries():
+    conn = sqlite3.connect('Medacta.db')
+    c = conn.cursor()
+    c.execute("SELECT id, question FROM Graph_queries")
+    queries = c.fetchall()
+    conn.close()
+    return queries
+
 
 def set_page_background(color):
     page_bg_img = f'''
@@ -986,7 +1555,7 @@ def main_app_medacta():
 
     # AI Agent Examples Section (Selectbox with initial empty option)
     st.sidebar.markdown("### AI Agent Examples")
-    agent_examples = st.sidebar.selectbox("AI Agent Examples", ["", "Clinical Question Agent", "EAV Searcher"], key="agent_examples", label_visibility="collapsed", on_change=lambda: setattr(st.session_state, 'last_selected', 'agent_examples') if st.session_state.agent_examples else None)
+    agent_examples = st.sidebar.selectbox("AI Agent Examples", ["", "Clinical Question Agent", "EAV Searcher", "Graph Query"], key="agent_examples", label_visibility="collapsed", on_change=lambda: setattr(st.session_state, 'last_selected', 'agent_examples') if st.session_state.agent_examples else None)
 
     # Determine which page to show based on the last selected section
     if st.session_state.last_selected == 'data_view':
@@ -1006,6 +1575,8 @@ def main_app_medacta():
             main_app()
         elif agent_examples == "EAV Searcher":
             eav_searcher()
+        elif agent_examples == "Graph Query":
+            graph_qa_page()
     else:
         # Default view (first option of the first menu)
         show_prompt_screen()
