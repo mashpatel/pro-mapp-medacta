@@ -103,6 +103,7 @@ Graph Schema:
 Natural language query: {query}
 
 Key Guidelines:
+0. Always write your own Correlation function. NEVER try and use "corr()" in your Cypher queries.
 1. Start with MATCH for pattern matching. Use a single WHERE clause for all conditions.
 2. Use case-insensitive matching (=~ '(?i)...') for string comparisons.
 3. Handle unit conversions and null values in CASE statements within WITH clauses.
@@ -239,14 +240,33 @@ LIMIT 100;
    This helps identify potential data quality issues and conversion problems.
 
 9. When dealing with averages of potentially problematic numeric data, avoid using coalesce() to replace NULL with 0, as this can skew results. Instead, let avg() handle NULLs naturally and provide count information for context.
+10. Always carry forward all necessary variables in WITH clauses, especially node variables like patient (p) that are needed for later operations.
+    Correct:   WITH p, otherVar1, otherVar2
+    Incorrect: WITH otherVar1, otherVar2
 
+11. When using OPTIONAL MATCH, ensure that the main entity (e.g., patient) is carried through all subsequent WITH clauses.
+
+12. Before the final RETURN clause, use a WITH clause that explicitly lists all variables needed for the return, including those used in aggregate functions.
+
+Example of correct variable handling in a multi-step query:
+
+MATCH (p:Patient)
+WITH p, toFloat(p.SomeProperty) AS someValue
+OPTIONAL MATCH (p)-[:SOME_RELATIONSHIP]->(o:OtherNode)
+WHERE o.SomeCondition IS NOT NULL
+WITH p, someValue, CASE WHEN o.SomeCondition IS NOT NULL THEN 1 ELSE 0 END AS someCondition
+RETURN
+  count(DISTINCT p) AS totalPatients,
+  avg(someValue) AS averageValue,
+  sum(someCondition) AS conditionCount
+LIMIT 100;
 Critical Relationship Patterns:
 1. Patient to Procedure: (p:Patient)-[:UNDERWENT]->(pr:Procedure)
 2. Procedure to Location: (pr:Procedure)-[:PERFORMED_AT]->(l:Location)
 3. Location to SurgicalTeam: (l:Location)-[:HAS_TEAM]->(st:SurgicalTeam)
 4. Full path: (p:Patient)-[:UNDERWENT]->(pr:Procedure)-[:PERFORMED_AT]->(l:Location)-[:HAS_TEAM]->(st:SurgicalTeam)
 
-10. When calculating ratios or percentages:
+13. When calculating ratios or percentages:
     a. Use CASE statements to create boolean values (0 or 1) for each category.
     b. Sum these values to get counts for each category.
     c. Calculate ratios using floating-point division.
@@ -272,7 +292,31 @@ Common Pitfalls to Avoid:
 3. Check for null values in critical fields before performing operations on them.
 4. Use OPTIONAL MATCH for relationships that may not always exist to avoid losing data.
 
+14. For queries involving patients and related entities, always ensure the patient node (typically aliased as 'p') is carried through all WITH clauses up to the final RETURN.
+15. For patient-related queries, always use the structure provided in "Query Structure for Patient-Related Queries".
+16. Avoid multiple WITH clauses in patient-related queries to prevent variable scoping issues.
+17. Perform all calculations and case statements in a single WITH clause immediately before the RETURN statement.
 
+Query Structure for Patient-Related Queries:
+1. Start with MATCH (p:Patient) to establish the patient node.
+2. Use a single WITH clause before the RETURN statement to prepare all necessary calculations and aggregations.
+3. In this WITH clause, perform all necessary calculations and create case statements.
+4. Use this structure for patient-related queries:
+5 NEVER try and use "corr" function for correlation in Cypher queries. Always write the Correlation from first principles.
+
+MATCH (p:Patient)
+OPTIONAL MATCH (p)-[:RELATIONSHIP]->(:OtherNode)
+WHERE <conditions>
+WITH p,
+  <calculation1> AS var1,
+  <calculation2> AS var2,
+  CASE WHEN <condition> THEN <value1> ELSE <value2> END AS var3
+RETURN
+  <aggregations and results>
+LIMIT 100
+
+
+This structure ensures that the patient node 'p' is available for all calculations and aggregations in the RETURN clause.
 Output only the Cypher query, ending with a semicolon.
 """
 
@@ -424,14 +468,6 @@ def graph_qa_page():
         run_preconfigured_query()
     elif st.session_state.selected_action == "new_question":
         ask_new_question_flow()
-
-    # Clear button at the bottom (only shown after a query has been executed)
-    if st.session_state.query_executed:
-        if st.button("Clear", key="clear_bottom"):
-            st.session_state.selected_action = None
-            st.session_state.query_executed = False
-            st.session_state.user_query = ""
-            st.rerun()
 
 def run_preconfigured_query():
     queries = get_preconfigured_queries()
@@ -620,6 +656,75 @@ def get_preconfigured_queries():
     queries = c.fetchall()
     conn.close()
     return queries
+
+def delete_graph_queries():
+    st.subheader("Delete Graph Queries")
+
+    # Fetch all queries
+    conn = sqlite3.connect('Medacta.db')
+    df = pd.read_sql_query("SELECT id, question, cypher_query FROM Graph_queries", conn)
+    conn.close()
+
+    if df.empty:
+        st.warning("No queries found in the database.")
+        return
+
+    # Add a checkbox column
+    df['Delete'] = False
+
+    # Display the dataframe as an editable table
+    edited_df = st.data_editor(
+        df,
+        hide_index=True,
+        column_config={
+            "Delete": st.column_config.CheckboxColumn(
+                "Select",
+                help="Select to delete",
+                default=False,
+            ),
+        
+            "question": st.column_config.TextColumn(
+                "Question",
+                help="The natural language question",
+                max_chars=50,
+            ),
+            "cypher_query": st.column_config.TextColumn(
+                "Cypher Query",
+                help="The corresponding Cypher query",
+                max_chars=50,
+            ),
+        },
+        disabled=["id", "question", "cypher_query"],
+        num_rows="dynamic",
+    )
+
+    # Delete button
+    if st.button("Delete Selected Queries"):
+        selected_ids = edited_df[edited_df['Delete']]['id'].tolist()
+        
+        if not selected_ids:
+            st.warning("No queries selected for deletion.")
+        else:
+            try:
+                conn = sqlite3.connect('Medacta.db')
+                c = conn.cursor()
+                c.executemany("DELETE FROM Graph_queries WHERE id = ?", [(id,) for id in selected_ids])
+                conn.commit()
+                conn.close()
+                st.success(f"{len(selected_ids)} queries deleted successfully.")
+                
+                # Set a flag in session state to indicate deletion occurred
+                st.session_state.queries_deleted = True
+                
+                # Use st.rerun() to refresh the page
+                st.rerun()
+            except Exception as e:
+                st.error(f"An error occurred while deleting queries: {str(e)}")
+
+    # Provide a back button to return to the main interface
+    if st.button("Refresh"):
+        st.session_state.page = "main"  # Assuming you have a way to navigate back to the main page
+        st.rerun()
 
 
 def set_page_background(color):
@@ -1292,26 +1397,6 @@ def show_all_questions():
     else:
         st.info("No questions found in the database.")
 
-def add_question():
-    st.markdown('<p class="big-font">Add New Question</p>', unsafe_allow_html=True)
-    new_question = st.text_area("Type your new question:", height=100)
-    
-    if st.button("Add Question"):
-        if new_question:
-            existing_questions = get_questions_from_db()
-            matches = fuzzy_search(new_question, existing_questions, limit=1)
-            
-            if matches and matches[0][1] >= 90:  # If similarity is 90% or higher
-                st.warning(f"This question is similar to an existing question: '{matches[0][0]}'")
-                if st.button("Add Anyway"):
-                    add_question_to_db(new_question)
-                    st.success("Question added successfully!")
-            else:
-                add_question_to_db(new_question)
-                st.success("Question added successfully!")
-        else:
-            st.error("Please enter a question before adding.")
-
 def show_all_data():
     st.header("All Surgical Data")
     
@@ -1486,6 +1571,61 @@ def eav_searcher():
         else:
             st.warning("Please select a Pathway ID before generating a summary.")
 
+def manage_questions():
+    st.title("Manage Questions")
+
+    # Initialize session state
+    if 'question_action' not in st.session_state:
+        st.session_state.question_action = None
+
+    col1, col2 = st.columns(2)
+    
+    with col1:
+        if st.button("Add Questions (SQL)"):
+            st.session_state.question_action = "add"
+            st.rerun()
+    
+    with col2:
+        if st.button("Delete Questions (Graph)"):
+            st.session_state.question_action = "delete"
+            st.rerun()
+
+    if st.session_state.question_action == "add":
+        add_questions_sql()
+    elif st.session_state.question_action == "delete":
+        delete_graph_queries()
+
+    # Reset action if queries were deleted
+    if st.session_state.get('queries_deleted', False):
+        st.session_state.queries_deleted = False
+        st.session_state.question_action = "delete"  # Stay on the delete page
+        st.rerun()
+
+def add_questions_sql():
+    st.subheader("Add New Question")
+    new_question = st.text_area("Type your new question:", height=100)
+    
+    if st.button("Add Question"):
+        if new_question:
+            existing_questions = get_questions_from_db()
+            matches = fuzzy_process.extract(new_question, existing_questions, limit=1)
+            
+            if matches and matches[0][1] >= 90:  # If similarity is 90% or higher
+                st.warning(f"This question is similar to an existing question: '{matches[0][0]}'")
+                if st.button("Add Anyway"):
+                    add_question_to_db(new_question)
+                    st.success("Question added successfully!")
+            else:
+                add_question_to_db(new_question)
+                st.success("Question added successfully!")
+        else:
+            st.error("Please enter a question before adding.")
+
+    if st.button("Back to Manage Questions"):
+        st.session_state.question_action = None
+        st.rerun()
+
+
 def add_question():
     st.markdown('<p class="big-font">Add New Question</p>', unsafe_allow_html=True)
     new_question = st.text_area("Type your new question:", height=100)
@@ -1547,7 +1687,7 @@ def main_app_medacta():
 
     # Data View Section (Radio buttons with default selection)
     st.sidebar.markdown("### Data View")
-    data_view = st.sidebar.radio("Data View", ["SQL Generator", "All Data", "Add Question"], index=0, key="data_view", label_visibility="collapsed", on_change=lambda: setattr(st.session_state, 'last_selected', 'data_view'))
+    data_view = st.sidebar.radio("Data View", ["SQL Generator", "All Data", "Manage Questions"], index=0, key="data_view", label_visibility="collapsed", on_change=lambda: setattr(st.session_state, 'last_selected', 'data_view'))
 
     # Data Viz Section (Selectbox with initial empty option)
     st.sidebar.markdown("### Data Visualizations")
@@ -1563,8 +1703,8 @@ def main_app_medacta():
             show_prompt_screen()
         elif data_view == "All Data":
             show_all_data()
-        elif data_view == "Add Question":
-            add_question()
+        elif data_view == "Manage Questions":
+            manage_questions()
     elif st.session_state.last_selected == 'data_viz' and data_viz:
         if data_viz == "Surgeries by Surgeon":
             show_surgeries_by_surgeon()
